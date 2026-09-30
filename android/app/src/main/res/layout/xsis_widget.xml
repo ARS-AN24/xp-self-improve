@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/xsis_widget_background">
+
+    <TextView
+        android:id="@+id/widget_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="LEVEL 1"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="sans"
+        android:includeFontPadding="false" />
+
+    <TextView
+        android:id="@+id/widget_today_xp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="+0 TODAY"
+        android:textColor="#B9C8FF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:fontFamily="sans"
+        android:includeFontPadding="false" />
+
+    <TextView
+        android:id="@+id/widget_xp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_level"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:text="0 / 100 XP"
+        android:textColor="#E8E8E8"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:fontFamily="sans"
+        android:includeFontPadding="false" />
+
+    <ProgressBar
+        android:id="@+id/widget_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_below="@id/widget_xp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/xsis_widget_progress" />
+
+    <TextView
+        android:id="@+id/widget_total_xp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/widget_progress"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:text="0 TOTAL XP"
+        android:textColor="#9E9E9E"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:fontFamily="sans"
+        android:includeFontPadding="false" />
+
+</RelativeLayout>
