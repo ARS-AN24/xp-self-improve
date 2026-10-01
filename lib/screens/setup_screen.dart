@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../services/app_state.dart';
-import '../services/storage_service.dart';
 
 class SetupScreen extends StatefulWidget {
   final AppState appState;
@@ -30,8 +29,7 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   Future<void> _continue() async {
-    final nickname =
-        _nicknameController.text.trim();
+    final nickname = _nicknameController.text.trim();
 
     if (nickname.isEmpty || _saving) {
       return;
@@ -41,27 +39,21 @@ class _SetupScreenState extends State<SetupScreen> {
       _saving = true;
     });
 
-    // IMPORTANT:
-    // Do not call AppState.setNickname().
-    // We are testing whether notifyListeners()
-    // is what causes the red screen.
-
-    widget.appState.nickname = nickname;
-
-    await StorageService.saveNickname(nickname);
-
-    if (!mounted) return;
-
-    setState(() {
-      _saving = false;
-    });
+    try {
+      await widget.appState.setNickname(nickname);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _saving = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final isLight =
-        Theme.of(context).brightness ==
-            Brightness.light;
+        Theme.of(context).brightness == Brightness.light;
 
     final accent =
         Color(widget.appState.accentColorValue);
@@ -81,51 +73,34 @@ class _SetupScreenState extends State<SetupScreen> {
             isLight
                 ? const Color(0xFFF3F3F3)
                 : const Color(0xFF090909),
-
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
-
               child: ConstrainedBox(
-                constraints:
-                    const BoxConstraints(
+                constraints: const BoxConstraints(
                   maxWidth: 520,
                 ),
-
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
-
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 40),
 
                     Container(
                       width: 86,
                       height: 86,
-
                       decoration: BoxDecoration(
                         borderRadius:
                             BorderRadius.circular(28),
-
                         border: Border.all(
                           color:
-                              accent.withValues(
-                            alpha: 0.45,
-                          ),
+                              accent.withValues(alpha: 0.45),
                         ),
-
-                        gradient:
-                            LinearGradient(
-                          begin:
-                              Alignment.topLeft,
-                          end:
-                              Alignment.bottomRight,
-
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                           colors: [
-                            accent.withValues(
-                              alpha: 0.22,
-                            ),
+                            accent.withValues(alpha: 0.22),
                             isLight
                                 ? Colors.white.withValues(
                                     alpha: 0.7,
@@ -135,19 +110,15 @@ class _SetupScreenState extends State<SetupScreen> {
                                   ),
                           ],
                         ),
-
                         boxShadow: [
                           BoxShadow(
                             color:
-                                accent.withValues(
-                              alpha: 0.22,
-                            ),
+                                accent.withValues(alpha: 0.22),
                             blurRadius: 30,
                             spreadRadius: 2,
                           ),
                         ],
                       ),
-
                       child: Icon(
                         Icons.bolt_rounded,
                         size: 44,
@@ -160,7 +131,6 @@ class _SetupScreenState extends State<SetupScreen> {
                     Text(
                       'XP Self Improve',
                       textAlign: TextAlign.center,
-
                       style: TextStyle(
                         color: textColor,
                         fontSize: 32,
@@ -174,7 +144,6 @@ class _SetupScreenState extends State<SetupScreen> {
                     Text(
                       'Your personal system for improving every day.',
                       textAlign: TextAlign.center,
-
                       style: TextStyle(
                         color: secondaryColor,
                         fontSize: 15,
@@ -188,79 +157,57 @@ class _SetupScreenState extends State<SetupScreen> {
                     ClipRRect(
                       borderRadius:
                           BorderRadius.circular(30),
-
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
                           sigmaX: 18,
                           sigmaY: 18,
                         ),
-
                         child: Container(
                           padding:
                               const EdgeInsets.all(24),
-
-                          decoration:
-                              BoxDecoration(
+                          decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(30),
-
                             border: Border.all(
                               color:
                                   isLight
-                                      ? Colors.black
-                                          .withValues(
+                                      ? Colors.black.withValues(
                                           alpha: 0.10,
                                         )
-                                      : Colors.white
-                                          .withValues(
+                                      : Colors.white.withValues(
                                           alpha: 0.12,
                                         ),
                             ),
-
-                            gradient:
-                                LinearGradient(
-                              begin:
-                                  Alignment.topLeft,
-                              end:
-                                  Alignment.bottomRight,
-
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
                               colors: [
                                 isLight
-                                    ? Colors.white
-                                        .withValues(
+                                    ? Colors.white.withValues(
                                         alpha: 0.75,
                                       )
-                                    : Colors.white
-                                        .withValues(
+                                    : Colors.white.withValues(
                                         alpha: 0.09,
                                       ),
-
                                 isLight
-                                    ? Colors.white
-                                        .withValues(
+                                    ? Colors.white.withValues(
                                         alpha: 0.40,
                                       )
-                                    : Colors.white
-                                        .withValues(
+                                    : Colors.white.withValues(
                                         alpha: 0.025,
                                       ),
                               ],
                             ),
-
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black
-                                    .withValues(
+                                color: Colors.black.withValues(
                                   alpha:
-                                      isLight
-                                          ? 0.08
-                                          : 0.35,
+                                      isLight ? 0.08 : 0.35,
                                 ),
                                 blurRadius: 30,
                                 offset:
                                     const Offset(0, 15),
                               ),
-
                               BoxShadow(
                                 color:
                                     accent.withValues(
@@ -270,15 +217,12 @@ class _SetupScreenState extends State<SetupScreen> {
                               ),
                             ],
                           ),
-
                           child: Column(
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
-
                             children: [
                               Text(
                                 'What should we call you?',
-
                                 style: TextStyle(
                                   color: textColor,
                                   fontSize: 20,
@@ -291,10 +235,8 @@ class _SetupScreenState extends State<SetupScreen> {
 
                               Text(
                                 'Choose a nickname for your profile.',
-
                                 style: TextStyle(
-                                  color:
-                                      secondaryColor,
+                                  color: secondaryColor,
                                   fontSize: 14,
                                   fontWeight:
                                       FontWeight.w500,
@@ -306,26 +248,20 @@ class _SetupScreenState extends State<SetupScreen> {
                               TextField(
                                 controller:
                                     _nicknameController,
-
                                 autofocus: false,
-
                                 textInputAction:
                                     TextInputAction.done,
-
                                 onSubmitted: (_) =>
                                     _continue(),
-
                                 style: TextStyle(
                                   color: textColor,
                                   fontWeight:
                                       FontWeight.w700,
                                 ),
-
                                 decoration:
                                     const InputDecoration(
                                   hintText:
                                       'Your nickname',
-
                                   prefixIcon: Icon(
                                     Icons.person_rounded,
                                   ),
@@ -335,33 +271,26 @@ class _SetupScreenState extends State<SetupScreen> {
                               const SizedBox(height: 18),
 
                               SizedBox(
-                                width:
-                                    double.infinity,
+                                width: double.infinity,
                                 height: 56,
-
                                 child:
                                     ElevatedButton(
                                   onPressed:
                                       _saving
                                           ? null
                                           : _continue,
-
                                   style:
                                       ElevatedButton
                                           .styleFrom(
                                     backgroundColor:
                                         accent,
-
                                     foregroundColor:
                                         Colors.white,
-
                                     disabledBackgroundColor:
                                         accent.withValues(
                                       alpha: 0.45,
                                     ),
-
                                     elevation: 0,
-
                                     shape:
                                         RoundedRectangleBorder(
                                       borderRadius:
@@ -369,27 +298,29 @@ class _SetupScreenState extends State<SetupScreen> {
                                               .circular(18),
                                     ),
                                   ),
-
-                                  child: _saving
-                                      ? const SizedBox(
-                                          width: 22,
-                                          height: 22,
-                                          child:
-                                              CircularProgressIndicator(
-                                            strokeWidth: 2.5,
-                                            color:
-                                                Colors.white,
-                                          ),
-                                        )
-                                      : const Text(
-                                          'Continue',
-                                          style:
-                                              TextStyle(
-                                            fontSize: 16,
-                                            fontWeight:
-                                                FontWeight.w800,
-                                          ),
-                                        ),
+                                  child:
+                                      _saving
+                                          ? const SizedBox(
+                                              width: 22,
+                                              height: 22,
+                                              child:
+                                                  CircularProgressIndicator(
+                                                strokeWidth:
+                                                    2.5,
+                                                color:
+                                                    Colors.white,
+                                              ),
+                                            )
+                                          : const Text(
+                                              'Continue',
+                                              style:
+                                                  TextStyle(
+                                                fontSize: 16,
+                                                fontWeight:
+                                                    FontWeight
+                                                        .w800,
+                                              ),
+                                            ),
                                 ),
                               ),
                             ],
@@ -403,7 +334,6 @@ class _SetupScreenState extends State<SetupScreen> {
                     Text(
                       'Do tasks. Gain XP. Level up. Improve.',
                       textAlign: TextAlign.center,
-
                       style: TextStyle(
                         color: secondaryColor,
                         fontSize: 12,
